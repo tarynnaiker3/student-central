@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Management System</title>
+    <style>
+        /* Global Reset to eliminate edge gaps and unwanted scrolling */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            overflow-x: hidden; /* Prevents accidental horizontal scrolling */
+        }
+
+        /* Base Hidden State */
+        .screen {
+            display: none;
+        }
+
+        /* --- LOGIN SCREEN (Isolated Fullscreen Flexbox) --- */
+        #login-screen.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            position: fixed; /* Locks it to the screen so no scrolling can happen */
+            top: 0;
+            left: 0;
+            background-color: #f0f2f5;
+            z-index: 9999;
+        }
+
+        .login-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .login-container img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Position inputs over your login.jpg box */
+        .password-input {
+            position: absolute;
+            top: 65%;      
+            left: 48%;     
+            width: 30%;    
+            height: 15px;  
+            font-size: 18px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        .login-btn {
+            position: absolute;
+            top: 80%;      
+            left: 40%;     
+            width: 15%;    
+            height: 20px;  
+            cursor: pointer;
+        }
+
+        /* --- MAIN APP INTERFACE (Full Width Ribbon) --- */
+        #main-application.active {
+            display: block;
+            width: 100%;
+        }
+
+        /* The Ribbon container now expands 100% edge-to-edge */
+        .ribbon-container {
+            position: relative;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Forces the ribbon image to stretch completely across the screen */
+        .ribbon-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Overlay Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 0;
+            height: 100%; 
+            cursor: pointer;
+        }
+
+        /* Adjust these percentages to line up with your ribbon text */
+        
+        #btn-class-marks { left: 10%; width: 5%; }
+        #btn-final-marks { left: 5%; width: 5%; }
+
+        /* --- CENTRALIZED CONTENT AREA --- */
+        .content-container {
+            display: none; /* Hidden until toggled */
+            width: 100%;
+            text-align: center;
+            padding: 40px 0; /* Gives space below the ribbon */
+            box-sizing: border-box;
+        }
+
+        /* Keeps the marks images centralized and sharp underneath the ribbon */
+        .content-container img {
+            display: inline-block;
+            max-width: 90%; /* Prevents image from becoming monstrously large on big screens */
+            height: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- VISUAL POSITIONING HELPERS --- */
+        .test-overlay {
+    background-color: transparent !important;
+    border: none !important;
+    outline: none; /* Removes the default blue highlight ring when clicked */
+}
+    </style>
+</head>
+<body>
+
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <img src="login.jpg" alt="Login Form Background">
+            <input type="password" id="pwd" class="password-input test-overlay">
+            <button id="submit-login" class="login-btn test-overlay"></button>
+        </div>
+    </div>
+
+    <div id="main-application" class="screen">
+        
+        <div class="ribbon-container">
+            <img src="newribbon.jpg" alt="Navigation Ribbon">
+            
+            <div id="btn-class-marks" class="nav-btn test-overlay" onclick="showSubScreen('class-marks')"></div>
+            <div id="btn-final-marks" class="nav-btn test-overlay" onclick="showSubScreen('final-marks')"></div>
+        </div>
+
+        <div id="view-final-marks" class="content-container" style="display: block;">
+            <img src="newfinalmarks.jpg" alt="Final Marks">
+        </div>
+
+        <div id="view-class-marks" class="content-container">
+            <img src="newclassmarks.jpg" alt="Class Marks">
+        </div>
+
+    </div>
+
+    <script>
+        // Handle Switching from Login to Dashboard
+        document.getElementById('submit-login').addEventListener('click', function() {
+            // Completely drop the login screen out of view
+            document.getElementById('login-screen').classList.remove('active');
+            
+            // Activate the main application dashboard
+            document.getElementById('main-application').classList.add('active');
+            
+            // Force page to scroll back to absolute top just in case
+            window.scrollTo(0, 0);
+        });
+
+        // "Enter" Key shortcut support
+        document.getElementById('pwd').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('submit-login').click();
+            }
+        });
+
+        // Handle navigation changes underneath the ribbon
+        function showSubScreen(screenName) {
+            const finalMarksView = document.getElementById('view-final-marks');
+            const classMarksView = document.getElementById('view-class-marks');
+
+            if (screenName === 'class-marks') {
+                finalMarksView.style.display = 'none';
+                classMarksView.style.display = 'block';
+            } else {
+                classMarksView.style.display = 'none';
+                finalMarksView.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
